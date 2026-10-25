@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Tab Whisperer",
+  "version": "1.6.2",
+  "description": "Tame your tabs with bookmark nicknames and saved workspaces for repeatable tasks.",
+  "permissions": ["bookmarks", "storage", "activeTab"],
+  "optional_permissions": ["tabs"],
+  "omnibox": { "keyword": "n" },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": { "default_title": "Launch a bookmark or workspace", "default_popup": "launcher.html" },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Ctrl+Shift+Space", "mac": "MacCtrl+Shift+Space" }
+    }
+  },
+  "options_ui": { "page": "manager.html", "open_in_tab": true },
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "content_security_policy": { "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'" }
+}

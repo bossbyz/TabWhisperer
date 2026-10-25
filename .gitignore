@@ -1,0 +1,6 @@
+.qa/
+node_modules/
+*.crdownload
+*.tmp
+Thumbs.db
+.DS_Store

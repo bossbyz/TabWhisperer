@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Tab Whisperer</title><script src="palette.js"></script><script src="theme.js"></script><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="manager.css"></head>
+<body>
+  <header class="manager-header"><div class="header-copy"><span class="badge">TAB WHISPERER</span><h1>Your command center.</h1><p>Manage your workspaces and bookmark nicknames.</p></div><input id="header-primary-color" class="header-color-picker" type="color" value="#5aa9e6" aria-label="Choose theme colour" title="Choose theme colour"></header>
+  <nav class="manager-tabs" role="tablist" aria-label="Manage">
+    <button id="tab-workspaces" role="tab" aria-controls="workspaces" aria-selected="true">Workspaces</button>
+    <button id="tab-bookmarks" role="tab" aria-controls="bookmarks" aria-selected="false" tabindex="-1">Bookmarks</button>
+    <button id="tab-settings" role="tab" aria-controls="settings" aria-selected="false" tabindex="-1">Settings &amp; backup</button>
+  </nav>
+  <main>
+    <section id="workspaces" class="workspace-panel" role="tabpanel" aria-labelledby="tab-workspaces">
+      <div class="workspace-heading"><div><h2 id="workspaces-heading">Workspaces</h2><p>Open the pages you need for a task, together in one window.</p></div><button id="workspace-new" type="button">New workspace</button></div>
+      <div id="workspace-list"></div>
+      <form id="workspace-form" hidden>
+        <h3 id="workspace-editor-title">New workspace</h3>
+        <div class="workspace-fields"><label>Name<input id="workspace-name" type="text" maxlength="100" required placeholder="Production deployment"></label><label>Nickname (optional)<input id="workspace-nickname" type="text" maxlength="64" placeholder="deploy"></label></div>
+        <p class="muted">Pages open in the order below. Choose a starting tab, and use the arrows to reorder them. Changes take effect on the next fresh launch.</p>
+        <ol id="workspace-entries"></ol>
+        <div class="workspace-picker"><label>Find a bookmark<input id="workspace-search" type="search" placeholder="Search nicknames, titles, addresses or folders"></label><div id="workspace-bookmarks"></div></div>
+        <div class="workspace-actions"><button id="workspace-capture" type="button">Use tabs from this window</button><button id="workspace-save" type="submit">Save workspace</button><button id="workspace-cancel" type="button">Cancel</button></div>
+        <p class="muted">Capturing replaces this draft's page list. Only web pages are included. Your open tabs stay as they are.</p>
+      </form>
+      <p id="workspace-status" role="status" aria-live="polite"></p>
+    </section>
+    <section id="bookmarks" role="tabpanel" aria-labelledby="tab-bookmarks" hidden>
+    <h2 class="bookmarks-heading">Bookmark nicknames</h2>
+    <div class="tools"><label class="search">Find a bookmark<input id="search" type="search" placeholder="Search titles, addresses, folders or nicknames"></label><label class="filter"><input id="named" type="checkbox"> Nicknamed only</label></div>
+    <p id="count" class="muted"></p>
+    <div id="list"></div><button id="more" hidden>Show more</button>
+    </section>
+    <section id="settings" role="tabpanel" aria-labelledby="tab-settings" hidden><h2>Settings &amp; backup</h2>
+<div class="appearance"><label for="primary-color">Primary colour</label><input id="primary-color" type="color" value="#5aa9e6" aria-describedby="color-hint"><small id="color-hint">Light and dark mode follow your system preference.</small><span id="theme-status" role="status" aria-live="polite"></span></div>
+  <section class="tip"><strong>Launch a nickname</strong><p>Press <kbd>Ctrl+Shift+Space</kbd> to open the launcher, type a nickname, then press <kbd>Enter</kbd>. Or bookmark the current page with a nickname directly from the launcher. You can also type <kbd>n</kbd> then <kbd>Space</kbd> in the address bar.</p><button id="shortcuts" aria-controls="shortcut-help" aria-expanded="false">Set your preferred shortcut</button>
+    <div id="shortcut-help" hidden><p>Your shortcut: <strong id="shortcut"></strong></p><p>Open settings, find <b>Tab Whisperer</b>, then edit <b>Activate the extension</b> and press your preferred keys. Edge applies the change; refresh this page to see it here.</p><button id="shortcut-settings">Open shortcut settings</button></div>
+  </section>
+
+  <footer><button id="export">Export backup</button><button id="import">Restore backup</button><input id="file" type="file" accept="application/json,.json" hidden><p>Nicknames are appended to bookmark titles as (test,test2). Title changes may sync through Edge. Workspaces and launcher settings stay local and are included in backups. Back up before removing the extension.</p></footer>
+    </section>
+  </main>
+  <p id="status" role="status" aria-live="polite"></p>
+  <template id="row"><article><details class="bookmark-editor"><summary><div class="bookmark"><h2></h2><p class="address"></p><p class="folder"></p></div><span class="edit-label">Edit</span></summary><form><div class="fields"><label>Bookmark title <span class="muted">(nickname suffix added automatically)</span><input class="title-input" type="text" autocomplete="off" aria-label="Bookmark title"></label><label>Nicknames <span class="muted">(comma separated)</span><input class="aliases-input" type="text" placeholder="e.g. tote, live box" autocomplete="off" aria-label="Nicknames"></label><p class="title-preview muted"></p></div><button type="submit">Save</button></form></details></article></template>
+  <script type="module" src="manager.js"></script>
+</body></html>

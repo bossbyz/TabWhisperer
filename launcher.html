@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Launch a bookmark</title><script src="palette.js"></script><script src="theme.js"></script><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="launcher.css"></head>
+<body>
+  <header><h1 id="launcher-title">Where to?</h1><span>TAB WHISPERER</span></header>
+  <div id="search-view">
+  <label for="query">Find a nickname or workspace</label>
+  <input id="query" type="search" role="combobox" aria-autocomplete="list" aria-controls="results" aria-expanded="false" aria-describedby="hint" placeholder="Type a nickname, e.g. tote" autocomplete="off" autofocus>
+  <p id="hint">↑ ↓ to choose · Enter to open · Ctrl+Enter for a new tab · Esc to close</p>
+  <div id="results" role="listbox" aria-label="Matching bookmarks"></div>
+  <p id="status" role="status" aria-live="polite">Loading nicknames…</p>
+  </div>
+  <section class="save-page">
+    <button id="bookmark-page" aria-controls="bookmark-form" aria-expanded="false" disabled>Bookmark this page</button>
+    <p id="page-hint">Reading the current page…</p>
+    <form id="bookmark-form" hidden>
+      <button id="back-search" type="button">← Back to search</button>
+      <p id="page-url"></p><label for="page-title">Bookmark title <span>(nickname suffix added automatically)</span></label><input id="page-title" type="text" autocomplete="off">
+      <label for="page-nickname">Nickname <span>(comma separated for more than one)</span></label>
+      <div class="save-controls"><input id="page-nickname" type="text" placeholder="e.g. tote" autocomplete="off" required><button id="save-page" type="submit">Save page + nickname</button></div>
+      <p id="save-status" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+  <footer><button id="manage">Manage</button><button id="shortcuts" aria-controls="shortcut-help" aria-expanded="false">Shortcuts</button><button id="capture-window">Save Window as Workspace</button></footer>
+  <section id="shortcut-help" class="shortcut-help" hidden>
+    <strong>Your shortcut: <span id="shortcut"></span></strong>
+    <p>Default: <b>Ctrl+Shift+Space</b>. To choose your own:</p>
+    <ol><li>Open Edge's shortcut settings below.</li><li>Find <b>Tab Whisperer</b>.</li><li>Click the edit button beside <b>Activate the extension</b>, then press your preferred keys.</li></ol>
+    <button id="shortcut-settings">Open shortcut settings</button>
+    <p>Edge applies the change. Reopen this plugin to see your new shortcut.</p>
+  </section>
+  <script type="module" src="launcher.js"></script>
+  <script type="module" src="workspace-launcher.js"></script>
+</body></html>
