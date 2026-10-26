@@ -1,7 +1,9 @@
-export const reloadGuidance = 'The extension did not respond. Open edge://extensions, click Reload for Tab Whisperer, then reopen the manager. If you are editing a workspace, keep a copy of its details before reloading.';
+import { extensionsPage } from './platform.mjs';
+
+export const reloadGuidance = `The extension did not respond. Open ${extensionsPage}, reload Tab Whisperer (or turn it off and on again), then reopen the manager. If you are editing a workspace, keep a copy of its details before reloading.`;
 
 // A freshly updated extension page can still be talking to the previous worker
-// until Edge reloads the extension. Unknown message types resolve without a reply.
+// until the browser reloads the extension. Unknown message types resolve without a reply.
 // Never retry a mutation automatically: the first call may already have saved.
 export async function sendWorkspaceMessage(api, message) {
   let response;
@@ -11,6 +13,6 @@ export async function sendWorkspaceMessage(api, message) {
     throw error;
   }
   if (!response || typeof response.ok !== 'boolean') throw new Error(reloadGuidance);
-  if (!response.ok) throw new Error(response.error || 'The workspace could not be saved or opened. Reload the extension at edge://extensions and try again.');
+  if (!response.ok) throw new Error(response.error || `The workspace could not be saved or opened. Reload the extension at ${extensionsPage} and try again.`);
   return response;
 }

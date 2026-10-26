@@ -161,6 +161,8 @@ refresh().then(async () => {
   if (captureId !== null) {
     history.replaceState(null, '', 'manager.html#workspaces');
     edit({ id: crypto.randomUUID(), name: '', nickname: '', entries: [], activeIndex: 0 }, true);
-    await capture(Number(captureId));
+    // Firefox launches capture without asking first; the permission prompt needs a click on this page.
+    if (await chrome.permissions.contains({ permissions: ['tabs'] })) await capture(Number(captureId));
+    else status('Choose “Use tabs from this window” and allow tab access to add this window’s pages.');
   }
 }).catch(error => status(error.message, true));
