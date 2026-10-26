@@ -32,10 +32,10 @@
     <section id="settings" role="tabpanel" aria-labelledby="tab-settings" hidden><h2>Settings &amp; backup</h2>
 <div class="appearance"><label for="primary-color">Primary colour</label><input id="primary-color" type="color" value="#5aa9e6" aria-describedby="color-hint"><small id="color-hint">Light and dark mode follow your system preference.</small><span id="theme-status" role="status" aria-live="polite"></span></div>
   <section class="tip"><strong>Launch a nickname</strong><p>Press <kbd>Ctrl+Shift+Space</kbd> to open the launcher, type a nickname, then press <kbd>Enter</kbd>. Or bookmark the current page with a nickname directly from the launcher. You can also type <kbd>n</kbd> then <kbd>Space</kbd> in the address bar.</p><button id="shortcuts" aria-controls="shortcut-help" aria-expanded="false">Set your preferred shortcut</button>
-    <div id="shortcut-help" hidden><p>Your shortcut: <strong id="shortcut"></strong></p><p>Open settings, find <b>Tab Whisperer</b>, then edit <b>Activate the extension</b> and press your preferred keys. Edge applies the change; refresh this page to see it here.</p><button id="shortcut-settings">Open shortcut settings</button></div>
+    <div id="shortcut-help" hidden><p>Your shortcut: <strong id="shortcut"></strong></p><p>Open settings, find <b>Tab Whisperer</b>, then edit <b>Activate the extension</b> and press your preferred keys. The change applies right away; refresh this page to see it here.</p><button id="shortcut-settings">Open shortcut settings</button></div>
   </section>
 
-  <footer><button id="export">Export backup</button><button id="import">Restore backup</button><input id="file" type="file" accept="application/json,.json" hidden><p>Nicknames are appended to bookmark titles as (test,test2). Title changes may sync through Edge. Workspaces and launcher settings stay local and are included in backups. Back up before removing the extension.</p></footer>
+  <footer><button id="export">Export backup</button><button id="import">Restore backup</button><input id="file" type="file" accept="application/json,.json" hidden><p>Nicknames are appended to bookmark titles as (test,test2). Title changes may sync through your browser's bookmark sync. Workspaces and launcher settings stay local and are included in backups. Back up before removing the extension.</p></footer>
     </section>
   </main>
   <p id="status" role="status" aria-live="polite"></p>

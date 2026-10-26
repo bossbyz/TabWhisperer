@@ -50,7 +50,7 @@ function render() {
   matches.sort((a, b) => Number(Boolean(aliases[b.id]?.length)) - Number(Boolean(aliases[a.id]?.length)) || a.title.localeCompare(b.title));
   $('count').textContent = `${matches.length} bookmarks · ${bookmarks.filter(b => aliases[b.id]?.length).length} nicknamed`;
   $('list').replaceChildren();
-  if (!matches.length) { const empty = document.createElement('p'); empty.textContent = 'No bookmarks found. Try another search or add a bookmark in Edge.'; $('list').append(empty); }
+  if (!matches.length) { const empty = document.createElement('p'); empty.textContent = 'No bookmarks found. Try another search or add a bookmark in your browser.'; $('list').append(empty); }
   for (const bookmark of matches.slice(0, shown)) {
     const row = $('row').content.cloneNode(true);
     row.querySelector('h2').textContent = bookmark.title;

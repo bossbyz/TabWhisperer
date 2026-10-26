@@ -2,6 +2,7 @@ import { flatten, rank, escapeXml, parseAliases, validateUnique, mergeBackup, sa
 import { commitBookmarks } from './bookmark-store.mjs';
 import { mergeWorkspaceBackup } from './workspaces.mjs';
 import { workspaceAction } from './workspace-service.mjs';
+import { isFirefox } from './platform.mjs';
 
 async function state() {
   const [tree, saved] = await Promise.all([chrome.bookmarks.getTree(), chrome.storage.local.get(['aliases', 'managedSuffixes'])]);
@@ -12,7 +13,10 @@ async function state() {
   return { bookmarks, aliases, managedSuffixes };
 }
 
-const help = 'Type a nickname, e.g. <match>tote</match> — manage nicknames from the toolbar icon';
+// Chromium styles omnibox descriptions with XML markup; Firefox shows them as plain text.
+const mark = (tag, value) => isFirefox ? String(value) : `<${tag}>${escapeXml(value)}</${tag}>`;
+const plain = value => isFirefox ? String(value) : escapeXml(value);
+const help = `Type a nickname, e.g. ${mark('match', 'tote')} — manage nicknames from the toolbar icon`;
 let generation = 0;
 chrome.omnibox.onInputStarted.addListener(() => { generation++; chrome.omnibox.setDefaultSuggestion({ description: help }); });
 chrome.omnibox.onInputCancelled.addListener(() => { generation++; });
@@ -23,9 +27,9 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
     if (request !== generation) return;
     const matches = rank(bookmarks, aliases, text);
     chrome.omnibox.setDefaultSuggestion({ description: matches.length
-      ? `Open <match>${escapeXml(matches[0].aliases.join(', '))}</match> — <dim>${escapeXml(matches[0].title)}</dim> — <url>${escapeXml(matches[0].url)}</url>`
+      ? `Open ${mark('match', matches[0].aliases.join(', '))} — ${mark('dim', matches[0].title)} — ${mark('url', matches[0].url)}`
       : 'No matching nickname — Enter opens your nickname manager' });
-    suggest(matches.map(b => ({ content: b.url, description: `<match>${escapeXml(b.aliases.join(', '))}</match> — ${escapeXml(b.title)} — <url>${escapeXml(b.url)}</url>` })));
+    suggest(matches.map(b => ({ content: b.url, description: `${mark('match', b.aliases.join(', '))} — ${plain(b.title)} — ${mark('url', b.url)}` })));
   } catch { if (request === generation) suggest([]); }
 });
 
