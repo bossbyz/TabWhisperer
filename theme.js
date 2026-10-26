@@ -1,4 +1,4 @@
-// Colour and look (v1 or v2) are user-selected; brightness always follows the system preference.
+// Colour and the glass look are user-selected; brightness always follows the system preference.
 (() => {
   const { normalize, build, defaultColor } = BookmarkPalette;
   const preference = matchMedia('(prefers-color-scheme: dark)');
@@ -24,47 +24,46 @@
   chrome.storage.local.get('primaryColor').then(saved => {
     if (!revision) { storedColor = normalize(saved.primaryColor); apply(storedColor); }
   }).catch(() => {});
-  // The look is cached in localStorage too, so the right one applies before first paint.
-  const normalizeLook = value => value === 'v2' ? 'v2' : 'v1';
-  let look = 'v1';
-  let lookRevision = 0;
-  function applyLook(value, animate = false) {
-    const next = normalizeLook(value);
+  // Glass defaults to on. It is cached in localStorage too, so the right look applies before first paint.
+  const normalizeGlass = value => value !== false && value !== 'false';
+  let glass = true;
+  let glassRevision = 0;
+  function applyGlass(value, animate = false) {
+    const next = normalizeGlass(value);
     const update = () => {
-      look = next;
-      document.documentElement.setAttribute('data-look', next);
-      for (const toggle of document.querySelectorAll('.look-switch')) toggle.setAttribute('aria-checked', String(next === 'v2'));
-      try { localStorage.setItem('look', next); } catch { /* The stored look still applies once loaded. */ }
+      glass = next;
+      document.documentElement.toggleAttribute('data-glass', next);
+      for (const input of document.querySelectorAll('.glass-input')) input.checked = next;
+      try { localStorage.setItem('glass', String(next)); } catch { /* The stored setting still applies once loaded. */ }
     };
-    const changed = next !== document.documentElement.getAttribute('data-look');
+    const changed = next !== document.documentElement.hasAttribute('data-glass');
     const motion = !matchMedia('(prefers-reduced-motion: reduce)').matches && document.visibilityState === 'visible';
     // A skipped transition still runs update(); only its ready promise rejects.
     if (animate && changed && motion && document.startViewTransition) document.startViewTransition(update).ready.catch(() => {});
     else update();
   }
-  try { look = normalizeLook(localStorage.getItem('look')); } catch { /* Use v1. */ }
-  applyLook(look);
-  chrome.storage.local.get('look').then(saved => { if (!lookRevision) applyLook(saved.look); }).catch(() => {});
+  try { glass = normalizeGlass(localStorage.getItem('glass')); } catch { /* Use the default. */ }
+  applyGlass(glass);
+  chrome.storage.local.get('glass').then(saved => { if (!glassRevision) applyGlass(saved.glass); }).catch(() => {});
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'local' && changes.primaryColor) {
       revision++;
       storedColor = normalize(changes.primaryColor.newValue);
       apply(storedColor);
     }
-    if (area === 'local' && changes.look) {
-      lookRevision++;
-      applyLook(changes.look.newValue, true);
+    if (area === 'local' && changes.glass) {
+      glassRevision++;
+      applyGlass(changes.glass.newValue, true);
     }
   });
-  function wireLook() {
-    for (const toggle of document.querySelectorAll('.look-switch')) {
-      toggle.setAttribute('aria-checked', String(look === 'v2'));
-      toggle.addEventListener('click', () => {
-        const previous = look;
-        const next = look === 'v2' ? 'v1' : 'v2';
-        lookRevision++;
-        applyLook(next, true);
-        chrome.storage.local.set({ look: next }).catch(() => applyLook(previous, true));
+  function wireGlass() {
+    for (const input of document.querySelectorAll('.glass-input')) {
+      input.checked = glass;
+      input.addEventListener('change', () => {
+        const previous = glass;
+        glassRevision++;
+        applyGlass(input.checked, true);
+        chrome.storage.local.set({ glass: input.checked }).catch(() => applyGlass(previous, true));
       });
     }
   }
@@ -93,6 +92,6 @@
     }
     for (const picker of pickers) picker.addEventListener('change', () => save(picker.value));
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => { wireLook(); wire(); }, { once: true });
-  else { wireLook(); wire(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => { wireGlass(); wire(); }, { once: true });
+  else { wireGlass(); wire(); }
 })();

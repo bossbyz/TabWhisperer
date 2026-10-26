@@ -41,7 +41,7 @@ function renderList() {
     const card = document.createElement('article'); card.className = 'workspace-card';
     card.style.setProperty('--i', String(index)); monogram(card, workspace.name);
     const heading = document.createElement('h3'); heading.textContent = workspace.name;
-    // Separate nodes let the v2 look style nicknames and pages as chips; the text is unchanged.
+    // Separate nodes let the glass look style nicknames and pages as chips; the text is unchanged.
     const detail = document.createElement('p'); detail.className = 'workspace-detail'; detail.append(`${workspace.entries.length} tabs`);
     if (workspace.nickname) {
       const nickname = document.createElement('span'); nickname.className = 'workspace-nick'; nickname.textContent = workspace.nickname;
