@@ -14,6 +14,7 @@ Press **Ctrl+Shift+Space** to open the launcher. Type a bookmark nickname and pr
 - **Workspaces:** Save ordered sets of pages for tasks such as deployments, monitoring, or incident response. Choose the starting tab and add an optional nickname.
 - **Quick launcher:** Search bookmarks and workspaces from the toolbar popup or keyboard shortcut.
 - **Window capture:** Save supported web pages from the current window to a workspace when you explicitly choose to capture them.
+- **Two looks:** Use the v1/v2 slider in the launcher or manager header to switch between the original look (v1, the default) and v2, a refreshed design with glass cards, gradients and keyboard hints. Both follow your chosen colour and system light or dark mode.
 - **Local settings and backups:** Nickname mappings, workspaces, and appearance settings stay in the browser profile. Export and restore backups from the manager.
 
 ## Install in Microsoft Edge

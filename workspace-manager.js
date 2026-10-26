@@ -1,6 +1,7 @@
 import { flatten, safeUrl } from './core.mjs';
 import { resolveWorkspace } from './workspaces.mjs';
 import { sendWorkspaceMessage } from './workspace-client.mjs';
+import { monogram } from './monogram.mjs';
 const $ = id => document.getElementById(id);
 let workspaces = [], bookmarks = [], aliases = {}, draft, creating = false, busy = false;
 function status(text, error = false) {
@@ -36,12 +37,22 @@ function renderList() {
     const empty = document.createElement('p'); empty.className = 'workspace-empty';
     empty.textContent = 'Your deployment desk, one shortcut away. Create a workspace from bookmarks, or save the tabs in a window.'; list.append(empty);
   }
-  for (const workspace of workspaces) {
+  workspaces.forEach((workspace, index) => {
     const card = document.createElement('article'); card.className = 'workspace-card';
+    card.style.setProperty('--i', String(index)); monogram(card, workspace.name);
     const heading = document.createElement('h3'); heading.textContent = workspace.name;
-    const detail = document.createElement('p'); detail.textContent = `${workspace.entries.length} tabs${workspace.nickname ? ` · ${workspace.nickname}` : ''}`;
+    // Separate nodes let the v2 look style nicknames and pages as chips; the text is unchanged.
+    const detail = document.createElement('p'); detail.className = 'workspace-detail'; detail.append(`${workspace.entries.length} tabs`);
+    if (workspace.nickname) {
+      const nickname = document.createElement('span'); nickname.className = 'workspace-nick'; nickname.textContent = workspace.nickname;
+      detail.append(' · ', nickname);
+    }
     const preview = document.createElement('p'); preview.className = 'muted';
-    preview.textContent = resolveWorkspace(workspace, bookmarks).entries.map(e => e.title).join(' · ');
+    resolveWorkspace(workspace, bookmarks).entries.forEach((entry, page) => {
+      const title = document.createElement('span'); title.textContent = entry.title;
+      if (page === workspace.activeIndex) title.className = 'workspace-start-page';
+      preview.append(...(page ? [' · ', title] : [title]));
+    });
     const actions = document.createElement('div'); actions.className = 'workspace-actions';
     button('Open', async () => { const r = await send({ type: 'workspaceOpen', id: workspace.id }); status(r.reused ? 'Focused your workspace window.' : 'Opened workspace in a new window.'); }, actions, `Open or focus ${workspace.name}`);
     const menu = document.createElement('details'); menu.className = 'workspace-menu';
@@ -58,7 +69,7 @@ function renderList() {
     }, secondary, `Delete ${workspace.name}`);
     const copy = document.createElement('div'); copy.className = 'workspace-copy'; copy.append(heading, detail, preview);
     card.append(copy, actions); list.append(card);
-  }
+  });
 }
 function edit(workspace, isNew = false) {
   if (draft && !window.confirm('Discard the current unsaved workspace draft?')) return;

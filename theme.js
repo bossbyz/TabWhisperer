@@ -1,4 +1,4 @@
-// Colour is user-selected; brightness always follows the system preference.
+// Colour and look (v1 or v2) are user-selected; brightness always follows the system preference.
 (() => {
   const { normalize, build, defaultColor } = BookmarkPalette;
   const preference = matchMedia('(prefers-color-scheme: dark)');
@@ -24,13 +24,50 @@
   chrome.storage.local.get('primaryColor').then(saved => {
     if (!revision) { storedColor = normalize(saved.primaryColor); apply(storedColor); }
   }).catch(() => {});
+  // The look is cached in localStorage too, so the right one applies before first paint.
+  const normalizeLook = value => value === 'v2' ? 'v2' : 'v1';
+  let look = 'v1';
+  let lookRevision = 0;
+  function applyLook(value, animate = false) {
+    const next = normalizeLook(value);
+    const update = () => {
+      look = next;
+      document.documentElement.setAttribute('data-look', next);
+      for (const toggle of document.querySelectorAll('.look-switch')) toggle.setAttribute('aria-checked', String(next === 'v2'));
+      try { localStorage.setItem('look', next); } catch { /* The stored look still applies once loaded. */ }
+    };
+    const changed = next !== document.documentElement.getAttribute('data-look');
+    const motion = !matchMedia('(prefers-reduced-motion: reduce)').matches && document.visibilityState === 'visible';
+    // A skipped transition still runs update(); only its ready promise rejects.
+    if (animate && changed && motion && document.startViewTransition) document.startViewTransition(update).ready.catch(() => {});
+    else update();
+  }
+  try { look = normalizeLook(localStorage.getItem('look')); } catch { /* Use v1. */ }
+  applyLook(look);
+  chrome.storage.local.get('look').then(saved => { if (!lookRevision) applyLook(saved.look); }).catch(() => {});
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area === 'local' && changes.primaryColor) {
       revision++;
       storedColor = normalize(changes.primaryColor.newValue);
       apply(storedColor);
     }
+    if (area === 'local' && changes.look) {
+      lookRevision++;
+      applyLook(changes.look.newValue, true);
+    }
   });
+  function wireLook() {
+    for (const toggle of document.querySelectorAll('.look-switch')) {
+      toggle.setAttribute('aria-checked', String(look === 'v2'));
+      toggle.addEventListener('click', () => {
+        const previous = look;
+        const next = look === 'v2' ? 'v1' : 'v2';
+        lookRevision++;
+        applyLook(next, true);
+        chrome.storage.local.set({ look: next }).catch(() => applyLook(previous, true));
+      });
+    }
+  }
   function wire() {
     const pickers = ['primary-color', 'header-primary-color']
       .map(id => document.getElementById(id)).filter(Boolean);
@@ -56,6 +93,6 @@
     }
     for (const picker of pickers) picker.addEventListener('change', () => save(picker.value));
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire, { once: true });
-  else wire();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => { wireLook(); wire(); }, { once: true });
+  else { wireLook(); wire(); }
 })();

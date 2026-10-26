@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Launch a bookmark</title><script src="palette.js"></script><script src="theme.js"></script><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="launcher.css"></head>
-<body>
-  <header><h1 id="launcher-title">Where to?</h1><span>TAB WHISPERER</span></header>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Launch a bookmark</title><script src="palette.js"></script><script src="theme.js"></script><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="launcher.css"><link rel="stylesheet" href="v2.css"></head>
+<body class="launcher">
+  <header><h1 id="launcher-title">Where to?</h1><div class="header-end"><span>TAB WHISPERER</span><button type="button" class="look-switch" role="switch" aria-checked="false" aria-label="v2 look" title="Switch between the v1 and v2 look"><i aria-hidden="true">v1</i><i aria-hidden="true">v2</i></button></div></header>
   <div id="search-view">
   <label for="query">Find a nickname or workspace</label>
   <input id="query" type="search" role="combobox" aria-autocomplete="list" aria-controls="results" aria-expanded="false" aria-describedby="hint" placeholder="Type a nickname, e.g. tote" autocomplete="off" autofocus>
   <p id="hint">↑ ↓ to choose · Enter to open · Ctrl+Enter for a new tab · Esc to close</p>
   <div id="results" role="listbox" aria-label="Matching bookmarks"></div>
-  <p id="status" role="status" aria-live="polite">Loading nicknames…</p>
+  <div class="status-row"><p id="status" role="status" aria-live="polite">Loading nicknames…</p><p class="v2-only keys" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd> move <kbd>↵</kbd> open <kbd>Ctrl</kbd><kbd>↵</kbd> new tab</p></div>
   </div>
   <section class="save-page">
     <button id="bookmark-page" aria-controls="bookmark-form" aria-expanded="false" disabled>Bookmark this page</button>

@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Tab Whisperer</title><script src="palette.js"></script><script src="theme.js"></script><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="manager.css"></head>
-<body>
-  <header class="manager-header"><div class="header-copy"><span class="badge">TAB WHISPERER</span><h1>Your command center.</h1><p>Manage your workspaces and bookmark nicknames.</p></div><input id="header-primary-color" class="header-color-picker" type="color" value="#5aa9e6" aria-label="Choose theme colour" title="Choose theme colour"></header>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Tab Whisperer</title><script src="palette.js"></script><script src="theme.js"></script><link rel="stylesheet" href="theme.css"><link rel="stylesheet" href="manager.css"><link rel="stylesheet" href="v2.css"></head>
+<body class="manager">
+  <header class="manager-header"><div class="header-copy"><span class="badge">TAB WHISPERER</span><h1>Your command center.</h1><p>Manage your workspaces and bookmark nicknames.</p></div><div class="header-controls"><button type="button" class="look-switch" role="switch" aria-checked="false" aria-label="v2 look" title="Switch between the v1 and v2 look"><i aria-hidden="true">v1</i><i aria-hidden="true">v2</i></button><input id="header-primary-color" class="header-color-picker" type="color" value="#5aa9e6" aria-label="Choose theme colour" title="Choose theme colour"></div></header>
   <nav class="manager-tabs" role="tablist" aria-label="Manage">
     <button id="tab-workspaces" role="tab" aria-controls="workspaces" aria-selected="true">Workspaces</button>
     <button id="tab-bookmarks" role="tab" aria-controls="bookmarks" aria-selected="false" tabindex="-1">Bookmarks</button>

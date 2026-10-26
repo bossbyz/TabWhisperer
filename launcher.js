@@ -2,6 +2,7 @@ import { flatten, rank, safeUrl, baseTitle, nicknameSuffix } from './core.mjs';
 import { setupShortcuts } from './shortcuts.js';
 import { rankWorkspaces } from './workspaces.mjs';
 import { sendWorkspaceMessage } from './workspace-client.mjs';
+import { monogram } from './monogram.mjs';
 const $ = id => document.getElementById(id);
 const input = $('query');
 let bookmarks = [], aliases = {}, managedSuffixes = {}, matches = [], selected = 0, opening = false;
@@ -37,6 +38,9 @@ function render() {
     const row = document.createElement('button');
     row.type = 'button'; row.className = 'result'; row.id = `match-${index}`;
     row.setAttribute('role', 'option'); row.tabIndex = -1;
+    row.dataset.kind = bookmark.kind || 'bookmark';
+    row.toggleAttribute('data-unnamed', bookmark.kind === 'workspace' && !bookmark.nickname);
+    monogram(row, bookmark.kind === 'workspace' ? bookmark.name : bookmark.title);
     const parts = bookmark.kind === 'workspace'
       ? [['strong', bookmark.nickname || bookmark.name, ''], ['span', bookmark.name, 'title'], ['span', `Workspace · ${bookmark.entries.length} tabs · Enter to open / focus · Ctrl+Enter for fresh window`, 'url']]
       : [['strong', bookmark.aliases.join(', '), ''], ['span', bookmark.title, 'title'], ['span', bookmark.url, 'url']];
