@@ -2,6 +2,7 @@ import { flatten, safeUrl, baseTitle, bookmarkTitle, parseAliases, nicknameSuffi
 import { setupShortcuts } from './shortcuts.js';
 import './workspace-manager.js';
 import { resolveWorkspace } from './workspaces.mjs';
+import { monogram } from './monogram.mjs';
 const $ = id => document.getElementById(id);
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 function selectTab(name, focus = false) {
@@ -56,6 +57,9 @@ function render() {
     row.querySelector('h2').textContent = bookmark.title;
     row.querySelector('.address').textContent = bookmark.url;
     row.querySelector('.folder').textContent = bookmark.folder;
+    const summary = row.querySelector('summary');
+    monogram(summary, bookmark.title);
+    summary.toggleAttribute('data-named', Boolean(aliases[bookmark.id]?.length));
     const title = row.querySelector('.title-input');
     const previousSuffix = managedSuffixes[bookmark.id] || nicknameSuffix(aliases[bookmark.id]);
     title.value = baseTitle(bookmark.title, previousSuffix);
